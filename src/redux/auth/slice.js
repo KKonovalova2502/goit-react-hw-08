@@ -48,6 +48,7 @@ const authSlice = createSlice({
         };
         state.token = null;
         state.isLoggedIn = false;
+        state.loading = false;
       })
       .addCase(logout.rejected, handleRejected)
 
@@ -59,7 +60,11 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.isRefreshing = false;
       })
-      .addCase(refreshUser.rejected, handleRejected),
+      .addCase(refreshUser.rejected, (state, action) => {
+        state.isRefreshing = false;
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+      }),
 });
 
 export default authSlice.reducer;
